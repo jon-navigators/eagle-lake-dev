@@ -20,8 +20,8 @@ export async function sendMagicLink(
     };
   }
 
-  // signIn throws a redirect to the verifyRequest page on success.
-  await signIn("nodemailer", { email, redirectTo: "/" });
-  // Unreachable in practice, but keeps the type happy.
-  redirect("/signin?sent=1");
+  // Send the magic link without letting Auth.js handle the redirect, then send
+  // the user to our branded "check your email" page deterministically.
+  await signIn("nodemailer", { email, redirect: false });
+  redirect("/check-email");
 }

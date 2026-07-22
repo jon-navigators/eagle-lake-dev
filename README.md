@@ -75,6 +75,26 @@ tenant id), and the rest of the app is unchanged.
 | `npm run db:migrate` | Apply Prisma migrations (dev) |
 | `npm run db:seed` | Load demo data |
 
+## Deploying (Vercel + Neon)
+
+1. **Neon** — create a project; copy the **direct** (non-pooled) connection
+   string. That becomes `DATABASE_URL`.
+2. **Vercel** — import this GitHub repo. Vercel auto-detects Next.js; `vercel.json`
+   sets the build to `prisma generate && prisma migrate deploy && next build`, so
+   migrations apply to Neon on every deploy.
+3. **Environment variables** (Vercel → Project → Settings → Environment Variables):
+   - `DATABASE_URL` — the Neon direct string
+   - `AUTH_SECRET` — `npx auth secret` (or `openssl rand -base64 32`)
+   - `ALLOWED_EMAIL_DOMAIN` — `navigators.org`
+   - `EMAIL_SERVER` — an SMTP URL so sign-in links actually send
+     (e.g. Resend, SendGrid, or Microsoft 365 SMTP). Without it, links only print
+     to the server logs.
+   - `EMAIL_FROM` — e.g. `Cairn <no-reply@yourdomain>`
+4. **Deploy.** First build runs the `init` migration and creates the schema.
+   Open the URL, sign in with a `@navigators.org` address, and you're in.
+
+`AUTH_URL` is auto-detected on Vercel; no need to set it.
+
 ## Design
 
 Rustic Eagle Lake: earthy greens (pine, moss), warm browns (bark), a single
