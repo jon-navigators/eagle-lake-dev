@@ -79,6 +79,39 @@ export async function deleteCommitment(formData: FormData) {
   revalidatePath("/");
 }
 
+/**
+ * Ask a teammate to take on a commitment. Creates it owned by the recipient in
+ * the PENDING state — it lands in their inbox until they accept or decline.
+ */
+export async function requestCommitment(formData: FormData) {
+  const me = await requireUser();
+  const toUserId = String(formData.get("toUserId") ?? "");
+  const title = String(formData.get("title") ?? "").trim();
+  if (!toUserId || !title) return;
+  if (toUserId === me.id) return; // request from someone else, not yourself
+
+  const recipient = await prisma.user.findUnique({
+    where: { id: toUserId },
+    select: { id: true },
+  });
+  if (!recipient) return;
+
+  await prisma.commitment.create({
+    data: {
+      title,
+      description: String(formData.get("description") ?? "").trim() || null,
+      dueDate: parseDueDate(formData.get("dueDate")),
+      ownerId: recipient.id,
+      requesterId: me.id,
+      requestStatus: "PENDING",
+      initiativeId: String(formData.get("initiativeId") ?? "") || null,
+    },
+  });
+
+  revalidatePath("/");
+  revalidatePath("/inbox");
+}
+
 /** Link (or unlink) a commitment to a company initiative. */
 export async function linkCommitmentToInitiative(formData: FormData) {
   const user = await requireUser();
