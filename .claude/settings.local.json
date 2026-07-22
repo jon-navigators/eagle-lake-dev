@@ -1,4 +1,26 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(npx gsd-core *)",
+      "Read(.planning/*)",
+      "Write(.planning/*)",
+      "Read(STATE.md)",
+      "Write(STATE.md)",
+      "Bash(echo \"=== / \\(expect redirect to /signin\\) ===\")",
+      "Bash(curl -s -o /dev/null -w 'root: HTTP %{http_code}\\\\n' https://eagle-lake-5pi53wxjt-eagle-lake.vercel.app/)",
+      "Bash(echo \"=== /signin ===\")",
+      "Bash(curl -s -o /tmp/sign.html -w '%{http_code}' https://eagle-lake-5pi53wxjt-eagle-lake.vercel.app/signin)",
+      "Bash(echo 'signin: HTTP __TRACKED_VAR__')",
+      "Bash(git add *)",
+      "Bash(git commit -q -m ' *)",
+      "Bash(git push *)"
+    ],
+    "deny": [
+      "Read(.env)",
+      "Read(.env.*)",
+      "Read(.secrets)"
+    ]
+  },
   "hooks": {
     "SessionStart": [
       {
@@ -160,19 +182,5 @@
   },
   "worktree": {
     "baseRef": "head"
-  },
-  "permissions": {
-    "allow": [
-      "Bash(npx gsd-core *)",
-      "Read(.planning/*)",
-      "Write(.planning/*)",
-      "Read(STATE.md)",
-      "Write(STATE.md)"
-    ],
-    "deny": [
-      "Read(.env)",
-      "Read(.env.*)",
-      "Read(.secrets)"
-    ]
   }
 }
