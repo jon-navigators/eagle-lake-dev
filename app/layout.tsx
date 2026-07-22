@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fraunces, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 
@@ -17,6 +17,12 @@ const sourceSans = Source_Sans_3({
 export const metadata: Metadata = {
   title: "Cairn",
   description: "A calm place to keep your commitments — for Eagle Lake staff.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#ede6d6",
 };
 
 export default function RootLayout({
