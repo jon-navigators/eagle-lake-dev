@@ -1,0 +1,174 @@
+// Cairn data model.
+// One calm place for Eagle Lake staff to track commitments and initiatives.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Auth.js (NextAuth) adapter models
+// ---------------------------------------------------------------------------
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique // gated to the allowed domain at sign-in
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+
+  accounts Account[]
+  sessions Session[]
+
+  // Cairn relations
+  roles            Role[]         @relation("RoleOccupant")
+  ownedCommitments Commitment[]   @relation("Owner")
+  requested        Commitment[]   @relation("Requester")
+  notifications    Notification[] @relation("Recipient")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ---------------------------------------------------------------------------
+// Cairn domain
+// ---------------------------------------------------------------------------
+
+// Org-chart node. Names a person (who may not have signed up yet) and points at
+// its parent — the tree of parent pointers IS the org chart and the source of
+// truth for teams.
+model Role {
+  id          String   @id @default(cuid())
+  title       String // "Program Director"
+  personName  String // display name for the box
+  description String?
+
+  parentId String? // null = a root of the tree
+  parent   Role?   @relation("RoleTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children Role[]  @relation("RoleTree")
+
+  userId String? // optional link to a real account ("This is me")
+  user   User?   @relation("RoleOccupant", fields: [userId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([parentId])
+  @@index([userId])
+}
+
+enum CommitmentStatus {
+  OPEN
+  DONE
+}
+
+// A request goes through NONE (a plain personal to-do) or the request lifecycle:
+// PENDING (awaiting the recipient) -> ACCEPTED (owned by recipient) or
+// DECLINED (bounced back to the requester).
+enum RequestStatus {
+  NONE
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+// A commitment is a personal to-do: something you need to do, or something you
+// told someone you'd do. A request is simply a commitment that isn't accepted
+// yet, so the whole lifecycle lives on this one row.
+model Commitment {
+  id          String           @id @default(cuid())
+  title       String
+  description String?
+  dueDate     DateTime?
+  status      CommitmentStatus @default(OPEN)
+
+  ownerId String // who it currently belongs to
+  owner   User   @relation("Owner", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  requesterId   String? // set when it originated as a request
+  requester     User?         @relation("Requester", fields: [requesterId], references: [id], onDelete: SetNull)
+  requestStatus RequestStatus @default(NONE)
+
+  initiativeId String?
+  initiative   Initiative? @relation(fields: [initiativeId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([ownerId, requestStatus])
+  @@index([initiativeId])
+}
+
+enum InitiativePeriod {
+  QUARTERLY
+  ANNUAL
+}
+
+// A company-level goal. Progress is never stored — it is computed from the
+// linked commitments (done / total).
+model Initiative {
+  id          String           @id @default(cuid())
+  title       String
+  description String?
+  period      InitiativePeriod @default(QUARTERLY)
+  createdAt   DateTime         @default(now())
+
+  commitments Commitment[]
+}
+
+enum NotificationType {
+  REQUEST_ACCEPTED
+  REQUEST_DECLINED
+}
+
+// The one thing that isn't a to-do: an in-app note that your request was
+// accepted or declined. Lands in the requester's inbox.
+model Notification {
+  id           String           @id @default(cuid())
+  type         NotificationType
+  recipientId  String
+  recipient    User             @relation("Recipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  commitmentId String?
+  commitmentTitle String
+  actorName    String // "Dana"
+  read         Boolean          @default(false)
+  createdAt    DateTime         @default(now())
+
+  @@index([recipientId, read])
+}

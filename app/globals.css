@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Cairn design tokens — rustic Eagle Lake.
+   Warm neutrals, earthy greens and browns, one accent (clay) for actions.
+--------------------------------------------------------------------------- */
+@theme {
+  --color-pine: #2f4a3c; /* primary — deep forest green */
+  --color-pine-700: #24382e;
+  --color-moss: #6b7f5b; /* sage — success / secondary */
+  --color-bark: #4a3b2e; /* text / headings — dark brown */
+  --color-bark-soft: #6f5d4c; /* muted body text */
+  --color-clay: #b5623c; /* single accent — CTAs, used sparingly */
+  --color-clay-600: #9c5030;
+  --color-sand: #ede6d6; /* page background — warm cream */
+  --color-cream: #f6f1e6; /* raised surfaces */
+  --color-stone: #d8cfbe; /* cards / borders */
+  --color-stone-dark: #c3b8a1;
+  --color-sky: #7c93a3; /* links / info — muted slate-blue */
+
+  --font-serif:
+    var(--font-fraunces), ui-serif, Georgia, Cambria, "Times New Roman", serif;
+  --font-sans:
+    var(--font-source-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --radius-2xl: 1rem;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-sand);
+  }
+  body {
+    background-color: var(--color-sand);
+    color: var(--color-bark);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-serif);
+    color: var(--color-bark);
+    letter-spacing: -0.01em;
+  }
+  ::selection {
+    background-color: color-mix(in srgb, var(--color-moss) 35%, transparent);
+  }
+}
