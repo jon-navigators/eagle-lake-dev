@@ -2,16 +2,10 @@ import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import Nodemailer from "next-auth/providers/nodemailer";
 import { prisma } from "@/lib/db";
+import { isAllowedEmail, ALLOWED_DOMAIN } from "@/lib/allowlist";
 
-export const ALLOWED_DOMAIN = (
-  process.env.ALLOWED_EMAIL_DOMAIN ?? "navigators.org"
-).toLowerCase();
-
-/** True if an email address belongs to the allowed org domain. */
-export function isAllowedEmail(email: string | null | undefined): boolean {
-  if (!email) return false;
-  return email.toLowerCase().trim().endsWith(`@${ALLOWED_DOMAIN}`);
-}
+// Re-export the gate so existing importers of "@/lib/auth" keep working.
+export { isAllowedEmail, ALLOWED_DOMAIN };
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),

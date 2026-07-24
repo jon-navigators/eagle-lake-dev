@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { signIn, isAllowedEmail, ALLOWED_DOMAIN } from "@/lib/auth";
+import { signIn, isAllowedEmail } from "@/lib/auth";
 
 export type SignInState = { error?: string };
 
@@ -16,7 +16,8 @@ export async function sendMagicLink(
   if (!email) return { error: "Enter your email address." };
   if (!isAllowedEmail(email)) {
     return {
-      error: `Cairn is for Eagle Lake staff — please use your @${ALLOWED_DOMAIN} address.`,
+      error:
+        "This email isn't on Cairn's staff list — ask an admin to add you.",
     };
   }
 

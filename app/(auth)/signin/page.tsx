@@ -21,9 +21,8 @@ export default async function SignInPage() {
         <div className="rounded-2xl border border-stone bg-cream p-6 shadow-sm sm:p-8">
           <SignInForm />
           <p className="mt-4 text-center text-xs text-bark-soft">
-            For Eagle Lake staff. Sign in with your{" "}
-            <span className="font-medium">@navigators.org</span> email — no
-            password needed.
+            For Eagle Lake staff. Sign in with your work email — no password
+            needed.
           </p>
         </div>
       </div>

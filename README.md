@@ -85,7 +85,12 @@ tenant id), and the rest of the app is unchanged.
 3. **Environment variables** (Vercel → Project → Settings → Environment Variables):
    - `DATABASE_URL` — the Neon direct string
    - `AUTH_SECRET` — `npx auth secret` (or `openssl rand -base64 32`)
-   - `ALLOWED_EMAIL_DOMAIN` — `navigators.org`
+   - **Access gate — set one of:**
+     - `ALLOWED_EMAILS` — comma/space/newline separated list of the exact staff
+       emails allowed to sign in (e.g. `jon@navigators.org, dana@navigators.org`).
+       When set, this is authoritative and the domain is ignored.
+     - `ALLOWED_EMAIL_DOMAIN` — `navigators.org`; used only when `ALLOWED_EMAILS`
+       is unset (allows anyone at that domain).
    - `EMAIL_SERVER` — an SMTP URL so sign-in links actually send
      (e.g. Resend, SendGrid, or Microsoft 365 SMTP). Without it, links only print
      to the server logs.
