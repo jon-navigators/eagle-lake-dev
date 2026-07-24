@@ -85,7 +85,7 @@ export default async function HomePage() {
           <RequestDialog
             people={peopleOptions}
             initiatives={initiatives}
-            trigger={<Button variant="ghost">Ask a teammate</Button>}
+            trigger={<Button variant="secondary">Ask a teammate</Button>}
           />
           <CommitmentDialog
             title="New commitment"

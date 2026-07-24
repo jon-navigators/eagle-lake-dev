@@ -25,8 +25,8 @@ Home is _your commitments_. Everything else is one click away.
 - [Next.js](https://nextjs.org) (App Router) + TypeScript — Server Components and
   server actions.
 - [Prisma](https://www.prisma.io) + PostgreSQL.
-- [Auth.js](https://authjs.dev) email magic-link sign-in, gated to the
-  `@navigators.org` domain (swap-ready for Microsoft Entra SSO — see below).
+- [Auth.js](https://authjs.dev) email-only sign-in, gated to an allowlist of
+  staff emails (swap-ready for magic link or Microsoft Entra SSO — see below).
 - [Tailwind CSS v4](https://tailwindcss.com) with the rustic Eagle Lake palette.
 - [React Flow](https://reactflow.dev) + [dagre](https://github.com/dagrejs/dagre)
   for the org chart.
@@ -50,18 +50,18 @@ npm run db:seed         # optional demo data
 npm run dev             # http://localhost:3000
 ```
 
-### Signing in during development
+### Signing in
 
-Leave `EMAIL_SERVER` unset and the magic-link **prints to the server console** —
-no SMTP needed. Enter a `@navigators.org` address on `/signin`, copy the link
-from the terminal, and open it. Other domains are rejected. Set `EMAIL_SERVER`
-to an SMTP URL to send real emails in production.
+Sign-in is **email-only**: enter an email that's on the allowlist (`ALLOWED_EMAILS`)
+and you're in — no password, no verification link. No SMTP/email provider is
+required.
 
-### Switching to Microsoft Entra SSO later
-
-Auth lives behind `lib/auth.ts`. To move from magic-link to Navigators SSO,
-register an app in the Entra tenant, add the Entra provider (restricted to the
-tenant id), and the rest of the app is unchanged.
+> ⚠️ **Security note:** email-only sign-in does not prove ownership of the
+> address — anyone who knows a listed teammate's email can sign in as them. The
+> allowlist limits this to known staff. It's an intentional, temporary trade-off
+> for an internal tool. Auth lives behind `lib/auth.ts`, so you can re-enable a
+> verified provider (magic link, or Microsoft Entra SSO restricted to the
+> Navigators tenant) when you want real authentication.
 
 ## Scripts
 
@@ -85,13 +85,15 @@ tenant id), and the rest of the app is unchanged.
 3. **Environment variables** (Vercel → Project → Settings → Environment Variables):
    - `DATABASE_URL` — the Neon direct string
    - `AUTH_SECRET` — `npx auth secret` (or `openssl rand -base64 32`)
-   - `ALLOWED_EMAIL_DOMAIN` — `navigators.org`
-   - `EMAIL_SERVER` — an SMTP URL so sign-in links actually send
-     (e.g. Resend, SendGrid, or Microsoft 365 SMTP). Without it, links only print
-     to the server logs.
-   - `EMAIL_FROM` — e.g. `Cairn <no-reply@yourdomain>`
+   - **Access gate — set one of:**
+     - `ALLOWED_EMAILS` — comma/space/newline separated list of the exact staff
+       emails allowed to sign in (e.g. `jon@navigators.org, dana@navigators.org`).
+       When set, this is authoritative and the domain is ignored.
+     - `ALLOWED_EMAIL_DOMAIN` — `navigators.org`; used only when `ALLOWED_EMAILS`
+       is unset (allows anyone at that domain).
+   *(No email/SMTP variables are needed — sign-in is email-only.)*
 4. **Deploy.** First build runs the `init` migration and creates the schema.
-   Open the URL, sign in with a `@navigators.org` address, and you're in.
+   Open the URL, sign in with an allowlisted email, and you're in.
 
 `AUTH_URL` is auto-detected on Vercel; no need to set it.
 

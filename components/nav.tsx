@@ -27,28 +27,30 @@ export function Nav({
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-stone bg-sand/85 backdrop-blur">
-      <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
+    <header className="sticky top-0 z-40 border-b border-hair bg-white">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-8 gap-y-2 px-8 py-3.5">
         <Link href="/" className="flex items-center gap-2">
-          <CairnMark className="h-6 w-6 text-pine" />
-          <span className="text-lg font-semibold text-bark">Cairn</span>
+          <CairnMark className="h-[30px] w-6" />
+          <span className="font-serif text-[22px] leading-none text-teal">
+            Cairn
+          </span>
         </Link>
 
-        <nav className="flex flex-1 items-center gap-1">
+        <nav className="flex flex-1 items-center gap-5">
           {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
               className={cn(
-                "relative rounded-lg px-3 py-1.5 text-sm transition-colors",
+                "relative py-1 text-sm transition-colors",
                 isActive(l.href)
-                  ? "bg-pine/10 font-medium text-pine"
-                  : "text-bark-soft hover:bg-stone/50 hover:text-bark",
+                  ? "border-b-2 border-gold font-semibold text-teal"
+                  : "font-medium text-coffee hover:text-espresso",
               )}
             >
               {l.label}
               {l.href === "/inbox" && inboxCount > 0 ? (
-                <span className="ml-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-clay px-1 text-xs font-semibold text-cream">
+                <span className="ml-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-gold px-1 text-xs font-semibold text-espresso">
                   {inboxCount}
                 </span>
               ) : null}
@@ -56,14 +58,14 @@ export function Nav({
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
-          <span className="hidden text-sm text-bark-soft sm:inline">
+        <div className="flex items-center gap-4">
+          <span className="hidden text-[13px] text-slate sm:inline">
             {userEmail}
           </span>
           <form action={signOutAction}>
             <button
               type="submit"
-              className="rounded-lg px-2 py-1 text-sm text-bark-soft hover:text-clay-600"
+              className="text-[13px] font-semibold text-teal hover:text-teal-hover"
             >
               Sign out
             </button>

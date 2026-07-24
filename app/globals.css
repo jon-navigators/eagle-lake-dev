@@ -1,38 +1,67 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-   Cairn design tokens — rustic Eagle Lake.
-   Warm neutrals, earthy greens and browns, one accent (clay) for actions.
+   Cairn design tokens — Navigators Design System ("Camp Ledger").
+   Editorial and warm: teal brand + gold punctuating accent, Playfair Display
+   headlines, Montserrat body, warm-paper background, white cards.
+   Status colors stay muted — this app deliberately avoids alarm red.
 --------------------------------------------------------------------------- */
 @theme {
-  --color-pine: #2f4a3c; /* primary — deep forest green */
-  --color-pine-700: #24382e;
-  --color-moss: #6b7f5b; /* sage — success / secondary */
-  --color-bark: #4a3b2e; /* text / headings — dark brown */
-  --color-bark-soft: #6f5d4c; /* muted body text */
-  --color-clay: #b5623c; /* single accent — CTAs, used sparingly */
-  --color-clay-600: #9c5030;
-  --color-sand: #ede6d6; /* page background — warm cream */
-  --color-cream: #f6f1e6; /* raised surfaces */
-  --color-stone: #d8cfbe; /* cards / borders */
-  --color-stone-dark: #c3b8a1;
-  --color-sky: #7c93a3; /* links / info — muted slate-blue */
+  /* Brand + accent */
+  --color-teal: #008c95;
+  --color-teal-hover: #006b72;
+  --color-teal-press: #004f54;
+  --color-teal-10: #e5f3f4;
+  --color-teal-25: #bfe2e4;
+  --color-gold: #d19f2a;
+  --color-gold-press: #b6871f;
+  --color-gold-10: #faf5e8;
+  --color-gold-25: #f3e7ca;
+
+  /* Neutrals */
+  --color-espresso: #392f2c; /* body text / headings */
+  --color-coffee: #61514e; /* secondary text */
+  --color-slate: #8e9c9c; /* tertiary / captions */
+  --color-paper: #fbfaf8; /* page background (warm paper) */
+  --color-surface: #ffffff; /* cards */
+  --color-subtle: #f6f5f5; /* tracks, done rows, badge fills */
+  --color-hair: #e3e0dc; /* hairline border */
+  --color-divider: #ececea;
+
+  /* Status (muted, never alarm red) */
+  --color-danger: #b64224;
+  --color-orange: #e16b2a;
+
+  /* --- Legacy token names remapped to the new palette so existing utility
+         classes (bg-pine, text-bark, bg-clay, …) render Camp Ledger. --- */
+  --color-pine: #008c95; /* was forest green → teal (primary) */
+  --color-pine-700: #006b72;
+  --color-moss: #008c95; /* success/progress/"you" → teal */
+  --color-bark: #392f2c; /* text → espresso */
+  --color-bark-soft: #61514e; /* muted text → coffee */
+  --color-clay: #d19f2a; /* accent → gold */
+  --color-clay-600: #b6871f;
+  --color-sand: #fbfaf8; /* page bg → warm paper */
+  --color-cream: #ffffff; /* surface → white */
+  --color-stone: #e3e0dc; /* borders → hairline */
+  --color-stone-dark: #c6cdcd; /* input borders → slate-50 */
+  --color-sky: #008c95; /* info → teal */
 
   --font-serif:
-    var(--font-fraunces), ui-serif, Georgia, Cambria, "Times New Roman", serif;
+    var(--font-playfair), Georgia, Cambria, "Times New Roman", serif;
   --font-sans:
-    var(--font-source-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
+    var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
 
   --radius-2xl: 1rem;
 }
 
 @layer base {
   html {
-    background-color: var(--color-sand);
+    background-color: var(--color-paper);
   }
   body {
-    background-color: var(--color-sand);
-    color: var(--color-bark);
+    background-color: var(--color-paper);
+    color: var(--color-espresso);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
@@ -40,10 +69,12 @@
   h2,
   h3 {
     font-family: var(--font-serif);
-    color: var(--color-bark);
-    letter-spacing: -0.01em;
+    font-weight: 400;
+    color: var(--color-espresso);
+    letter-spacing: -0.02em;
   }
   ::selection {
-    background-color: color-mix(in srgb, var(--color-moss) 35%, transparent);
+    background-color: var(--color-gold-25);
+    color: var(--color-espresso);
   }
 }

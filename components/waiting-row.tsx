@@ -12,7 +12,7 @@ export type WaitingView = {
 /** A request you sent that's still pending — visible, but calm. */
 export function WaitingRow({ item }: { item: WaitingView }) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-stone/70 px-4 py-3">
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-[10px] border border-dashed border-stone-dark bg-white px-4 py-3">
       <div className="min-w-0">
         <p className="text-sm text-bark">
           {item.title}{" "}

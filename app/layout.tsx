@@ -1,16 +1,16 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Source_Sans_3 } from "next/font/google";
+import { Playfair_Display, Montserrat } from "next/font/google";
 import "./globals.css";
 
-const fraunces = Fraunces({
+const playfair = Playfair_Display({
   subsets: ["latin"],
-  variable: "--font-fraunces",
+  variable: "--font-playfair",
   display: "swap",
 });
 
-const sourceSans = Source_Sans_3({
+const montserrat = Montserrat({
   subsets: ["latin"],
-  variable: "--font-source-sans",
+  variable: "--font-montserrat",
   display: "swap",
 });
 
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#ede6d6",
+  themeColor: "#fbfaf8",
 };
 
 export default function RootLayout({
@@ -31,7 +31,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${sourceSans.variable}`}>
+    <html lang="en" className={`${playfair.variable} ${montserrat.variable}`}>
       <body>{children}</body>
     </html>
   );
