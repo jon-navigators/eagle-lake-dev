@@ -27,7 +27,7 @@ export function SignInForm() {
         />
       </div>
       {state.error ? (
-        <p className="text-sm text-clay-600">{state.error}</p>
+        <p className="text-sm text-danger">{state.error}</p>
       ) : null}
       <Button type="submit" className="w-full" disabled={pending}>
         {pending ? "Signing in…" : "Sign in"}

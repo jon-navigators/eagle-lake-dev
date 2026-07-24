@@ -53,8 +53,8 @@ export function CommitmentCard({
           className={cn(
             "flex h-6 w-6 items-center justify-center rounded-full border-2 transition-colors",
             done
-              ? "border-moss bg-moss text-cream"
-              : "border-stone-dark hover:border-moss",
+              ? "border-teal bg-teal text-white"
+              : "border-teal-25 hover:border-teal",
           )}
         >
           {done ? (
@@ -81,13 +81,14 @@ export function CommitmentCard({
         ) : null}
         <div className="mt-2 flex flex-wrap items-center gap-2">
           {commitment.dueDate ? (
-            <Badge tone={overdue ? "muted" : "neutral"}>
-              {formatDueDate(commitment.dueDate)}
-              {overdue ? " · overdue" : ""}
+            <Badge tone={overdue ? "gold" : "neutral"}>
+              {overdue
+                ? `Overdue · ${formatDueDate(commitment.dueDate)}`
+                : formatDueDate(commitment.dueDate)}
             </Badge>
           ) : null}
           {commitment.initiative ? (
-            <Badge tone="sky">{commitment.initiative.title}</Badge>
+            <Badge tone="teal">{commitment.initiative.title}</Badge>
           ) : null}
         </div>
       </div>

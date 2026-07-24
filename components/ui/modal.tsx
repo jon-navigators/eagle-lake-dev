@@ -52,20 +52,22 @@ export function Modal({
       ) : null}
       {open ? (
         <div
-          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-bark/30 p-4 pt-[10vh] backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-[#392f2c]/42 p-4 pt-[10vh]"
           onClick={close}
         >
           <div
             className={cn(
-              "w-full max-w-lg rounded-2xl border border-stone bg-cream p-6 shadow-xl",
+              "w-full max-w-md overflow-hidden rounded-[10px] border-t-[3px] border-t-gold bg-white shadow-[0_28px_56px_-12px_rgba(57,47,44,0.4)]",
             )}
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
             aria-label={title}
           >
-            <h2 className="mb-4 text-xl">{title}</h2>
-            {children(close)}
+            <div className="p-6">
+              <h2 className="mb-1 text-2xl">{title}</h2>
+              <div className="mt-4">{children(close)}</div>
+            </div>
           </div>
         </div>
       ) : null}

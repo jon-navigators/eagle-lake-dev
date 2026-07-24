@@ -47,7 +47,7 @@ export function layoutRoles(roles: RoleInput[]): {
         source: r.parentId,
         target: r.id,
         type: "smoothstep",
-        style: { stroke: "#c3b8a1", strokeWidth: 2 },
+        style: { stroke: "#c6cdcd", strokeWidth: 2 },
       });
     }
   }

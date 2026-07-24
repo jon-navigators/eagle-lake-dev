@@ -1,14 +1,17 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-type Tone = "neutral" | "moss" | "clay" | "sky" | "muted";
+type Tone = "neutral" | "teal" | "gold" | "muted" | "moss" | "clay" | "sky";
 
 const tones: Record<Tone, string> = {
-  neutral: "bg-stone/60 text-bark",
-  moss: "bg-moss/20 text-pine",
-  clay: "bg-clay/15 text-clay-600",
-  sky: "bg-sky/20 text-bark",
-  muted: "bg-transparent text-bark-soft",
+  neutral: "bg-subtle text-slate border border-hair",
+  teal: "bg-teal-10 text-teal",
+  gold: "bg-gold-10 text-gold-press border border-gold-25",
+  muted: "bg-transparent text-slate",
+  // legacy aliases → Camp Ledger equivalents
+  moss: "bg-teal-10 text-teal",
+  clay: "bg-gold-10 text-gold-press border border-gold-25",
+  sky: "bg-teal-10 text-teal",
 };
 
 export function Badge({

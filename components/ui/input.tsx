@@ -2,7 +2,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const fieldStyles =
-  "w-full rounded-xl border border-stone-dark bg-sand/60 px-3 py-2 text-bark placeholder:text-bark-soft/60 focus:border-moss focus:outline-none focus:ring-2 focus:ring-moss/40";
+  "w-full rounded-[4px] border border-stone-dark bg-white px-3 py-2 text-espresso placeholder:text-slate focus:border-teal focus:outline-none focus:ring-[3px] focus:ring-teal-25";
 
 export const Input = React.forwardRef<
   HTMLInputElement,
@@ -38,7 +38,10 @@ export function Label({
 }: React.LabelHTMLAttributes<HTMLLabelElement>) {
   return (
     <label
-      className={cn("mb-1 block text-sm font-medium text-bark-soft", className)}
+      className={cn(
+        "mb-1 block text-[13px] font-semibold text-coffee",
+        className,
+      )}
       {...props}
     />
   );

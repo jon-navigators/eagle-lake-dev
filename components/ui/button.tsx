@@ -1,22 +1,24 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-type Variant = "primary" | "secondary" | "ghost" | "danger";
+type Variant = "primary" | "secondary" | "neutral" | "ghost" | "danger";
 type Size = "sm" | "md";
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-xl font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-moss/60 disabled:opacity-50 disabled:pointer-events-none";
+  "inline-flex items-center justify-center gap-2 rounded-[4px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-teal-25 disabled:opacity-50 disabled:pointer-events-none";
 
 const variants: Record<Variant, string> = {
-  // One accent for primary actions — clay — used sparingly.
-  primary: "bg-clay text-cream hover:bg-clay-600",
-  secondary: "bg-pine text-cream hover:bg-pine-700",
-  ghost: "bg-transparent text-bark hover:bg-stone/50",
-  danger: "bg-transparent text-clay hover:bg-clay/10 border border-clay/40",
+  // Teal is the primary action. Gold is never a CTA color.
+  primary: "bg-teal text-white hover:bg-teal-hover",
+  secondary:
+    "border-[1.5px] border-teal bg-white text-teal hover:bg-teal-10",
+  neutral: "border border-hair bg-white text-coffee hover:bg-subtle",
+  ghost: "bg-transparent text-coffee hover:bg-subtle",
+  danger: "border border-hair bg-white text-danger hover:bg-danger/5",
 };
 
 const sizes: Record<Size, string> = {
-  sm: "h-8 px-3 text-sm",
+  sm: "h-8 px-3 text-[13px]",
   md: "h-10 px-4 text-sm",
 };
 

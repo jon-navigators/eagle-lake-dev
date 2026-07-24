@@ -11,7 +11,7 @@ export default async function SignInPage() {
     <main className="flex min-h-screen items-center justify-center p-6">
       <div className="w-full max-w-md">
         <div className="mb-8 flex flex-col items-center text-center">
-          <CairnMark className="h-12 w-12 text-pine" />
+          <CairnMark className="h-[50px] w-10" />
           <h1 className="mt-4 text-3xl">Cairn</h1>
           <p className="mt-1 text-bark-soft">
             A calm place to keep your commitments.

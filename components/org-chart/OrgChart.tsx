@@ -45,43 +45,51 @@ function Inspector({
   }
 
   return (
-    <div className="w-64 rounded-2xl border border-stone bg-cream p-4 shadow-md">
-      <p className="text-sm font-semibold text-bark">{selected.title}</p>
-      <p className="text-sm text-bark-soft">{selected.personName}</p>
+    <div className="w-64 rounded-[10px] border border-hair bg-white p-4 shadow-[0_16px_40px_-12px_rgba(57,47,44,0.24)]">
+      <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate">
+        Selected role
+      </p>
+      <p className="mt-1 font-serif text-2xl text-espresso">{selected.title}</p>
+      <p className="text-sm text-coffee">{selected.personName}</p>
       {selected.description ? (
-        <p className="mt-2 text-xs text-bark-soft">{selected.description}</p>
+        <p className="mt-2 text-xs text-coffee">{selected.description}</p>
       ) : null}
 
-      <div className="mt-3 flex flex-wrap gap-2">
-        <Button size="sm" variant="ghost" onClick={onEdit}>
-          Edit
-        </Button>
-
+      <div className="mt-4 flex flex-col gap-2">
         {selected.isMe ? (
           <form action={unclaimRole}>
             <input type="hidden" name="roleId" value={selected.id} />
-            <Button size="sm" variant="ghost" type="submit">
+            <Button size="sm" variant="secondary" type="submit" className="w-full">
               Release
             </Button>
           </form>
         ) : (
           <form action={claimRole}>
             <input type="hidden" name="roleId" value={selected.id} />
-            <Button size="sm" variant="secondary" type="submit">
+            <Button size="sm" variant="primary" type="submit" className="w-full">
               This is me
             </Button>
           </form>
         )}
 
+        <Button size="sm" variant="secondary" onClick={onEdit} className="w-full">
+          Edit
+        </Button>
+
         {selected.parentId ? (
-          <Button size="sm" variant="ghost" onClick={makeTopLevel}>
+          <Button
+            size="sm"
+            variant="neutral"
+            onClick={makeTopLevel}
+            className="w-full"
+          >
             Make top-level
           </Button>
         ) : null}
 
         <form action={deleteRole}>
           <input type="hidden" name="id" value={selected.id} />
-          <Button size="sm" variant="danger" type="submit">
+          <Button size="sm" variant="danger" type="submit" className="w-full">
             Delete
           </Button>
         </form>
@@ -132,7 +140,7 @@ function Inner({ roles }: { roles: RoleInput[] }) {
   const selected = roles.find((r) => r.id === selectedId) ?? null;
 
   return (
-    <div className="h-[70vh] w-full overflow-hidden rounded-2xl border border-stone bg-sand">
+    <div className="h-[70vh] w-full overflow-hidden rounded-[10px] border border-hair bg-subtle">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -146,7 +154,7 @@ function Inner({ roles }: { roles: RoleInput[] }) {
         fitView
         proOptions={{ hideAttribution: true }}
       >
-        <Background color="#d8cfbe" gap={22} />
+        <Background color="#dad9d7" gap={22} />
         <Controls showInteractive={false} />
 
         <Panel position="top-left">
