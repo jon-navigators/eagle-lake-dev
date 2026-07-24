@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import Nodemailer from "next-auth/providers/nodemailer";
+import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@/lib/db";
 import { isAllowedEmail, ALLOWED_DOMAIN } from "@/lib/allowlist";
 
@@ -9,47 +9,48 @@ export { isAllowedEmail, ALLOWED_DOMAIN };
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
-  session: { strategy: "database" },
+  // Credentials requires JWT sessions (not database sessions).
+  session: { strategy: "jwt" },
   pages: {
     signIn: "/signin",
-    verifyRequest: "/check-email",
     error: "/signin",
   },
   providers: [
-    Nodemailer({
-      // A dummy transport is fine: when EMAIL_SERVER is unset we override
-      // sendVerificationRequest below and never touch it.
-      server: process.env.EMAIL_SERVER ?? { host: "localhost", port: 587 },
-      from: process.env.EMAIL_FROM ?? "Cairn <no-reply@cairn.local>",
-      async sendVerificationRequest({ identifier, url }) {
-        if (!process.env.EMAIL_SERVER) {
-          // Dev mode: no SMTP required — print the link to the server console.
-          console.log(
-            `\n──────── Cairn sign-in ────────\n${identifier}\n${url}\n───────────────────────────────\n`,
-          );
-          return;
-        }
-        const { createTransport } = await import("nodemailer");
-        const transport = createTransport(process.env.EMAIL_SERVER);
-        await transport.sendMail({
-          to: identifier,
-          from: process.env.EMAIL_FROM,
-          subject: "Your Cairn sign-in link",
-          text: `Sign in to Cairn:\n${url}\n\nThis link expires in 24 hours.\n`,
-          html: `<p>Sign in to Cairn:</p><p><a href="${url}">${url}</a></p><p style="color:#6B7F5B">This link expires in 24 hours.</p>`,
+    // Email-only sign-in: enter your email and, if you're on the allowlist,
+    // you're in — no password, no verification link. NOTE: this does not prove
+    // ownership of the address; it is an intentional, temporary trade-off for an
+    // internal, allowlisted staff tool. Re-enable a verified provider for real
+    // authentication.
+    Credentials({
+      name: "Email",
+      credentials: { email: { label: "Email", type: "email" } },
+      async authorize(credentials) {
+        const email = String(credentials?.email ?? "")
+          .trim()
+          .toLowerCase();
+        if (!isAllowedEmail(email)) return null;
+
+        // Find or create the staff user, then hand back the identity.
+        const user = await prisma.user.upsert({
+          where: { email },
+          create: { email },
+          update: {},
+          select: { id: true, email: true, name: true },
         });
+        return { id: user.id, email: user.email, name: user.name };
       },
     }),
   ],
   callbacks: {
-    // The gate: only allowed-domain addresses may request a link or sign in.
-    // For the email provider this runs before the link is sent, so a
-    // non-Navigators address never even receives one.
-    async signIn({ user }) {
-      return isAllowedEmail(user?.email);
+    async jwt({ token, user }) {
+      // On sign-in, persist the DB user id into the token.
+      if (user?.id) token.uid = user.id;
+      return token;
     },
-    async session({ session, user }) {
-      if (session.user) session.user.id = user.id;
+    async session({ session, token }) {
+      if (session.user && token.uid) {
+        session.user.id = token.uid as string;
+      }
       return session;
     },
   },
