@@ -7,6 +7,9 @@ import {
   type NotificationView,
 } from "@/components/notification-row";
 import { markAllNotificationsRead } from "@/app/(app)/inbox/actions";
+import { PageHeader } from "@/components/page-header";
+import { SectionHeader } from "@/components/ui/flash";
+import { Card } from "@/components/ui/card";
 
 export const dynamic = "force-dynamic";
 
@@ -46,54 +49,58 @@ export default async function InboxPage() {
   const hasUnread = notes.some((n) => !n.read);
 
   return (
-    <div className="space-y-10">
-      <div>
-        <h1 className="text-3xl">Inbox</h1>
-        <p className="mt-1 text-bark-soft">
-          Requests waiting on you, and word back on what you&apos;ve asked.
-        </p>
-      </div>
+    <>
+      <PageHeader
+        title="Inbox"
+        subtitle="Requests waiting on you, and word back on what you've asked"
+      />
 
-      <section className="space-y-3">
-        <h2 className="text-sm font-medium uppercase tracking-wide text-bark-soft">
-          Requests {requests.length > 0 ? `· ${requests.length}` : ""}
-        </h2>
-        {requests.length === 0 ? (
-          <EmptyState
-            title="No requests waiting."
-            hint="When a teammate asks you to take something on, it shows up here."
-          />
-        ) : (
-          requests.map((r) => <RequestRow key={r.id} request={r} />)
-        )}
-      </section>
+      <div className="mx-auto max-w-6xl px-6 py-9">
+        <section>
+          <SectionHeader className="mb-4">
+            Requests {requests.length > 0 ? `· ${requests.length}` : ""}
+          </SectionHeader>
+          {requests.length === 0 ? (
+            <EmptyState
+              title="No requests waiting."
+              hint="When a teammate asks you to take something on, it shows up here."
+            />
+          ) : (
+            <div className="grid gap-5 md:grid-cols-2">
+              {requests.map((r) => (
+                <RequestRow key={r.id} request={r} />
+              ))}
+            </div>
+          )}
+        </section>
 
-      <section className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-medium uppercase tracking-wide text-bark-soft">
-            Notifications
-          </h2>
-          {hasUnread ? (
-            <form action={markAllNotificationsRead}>
-              <button
-                type="submit"
-                className="text-xs text-bark-soft hover:text-bark"
-              >
-                Mark all read
-              </button>
-            </form>
-          ) : null}
-        </div>
-        {notes.length === 0 ? (
-          <p className="text-sm text-bark-soft">Nothing yet.</p>
-        ) : (
-          <div className="space-y-2">
-            {notes.map((n) => (
-              <NotificationRow key={n.id} note={n} />
-            ))}
+        <section>
+          <div className="mb-4 mt-10 flex items-center gap-3.5">
+            <SectionHeader className="flex-1">Notifications</SectionHeader>
+            {hasUnread ? (
+              <form action={markAllNotificationsRead}>
+                <button
+                  type="submit"
+                  className="shrink-0 border-[2px] border-ink px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.12em] text-ink hover:bg-gold"
+                >
+                  Mark all read
+                </button>
+              </form>
+            ) : null}
           </div>
-        )}
-      </section>
-    </div>
+          {notes.length === 0 ? (
+            <p className="text-[13px] font-bold uppercase tracking-[0.12em] text-muted">
+              Nothing yet.
+            </p>
+          ) : (
+            <Card className="divide-y-[3px] divide-ink overflow-hidden">
+              {notes.map((n) => (
+                <NotificationRow key={n.id} note={n} />
+              ))}
+            </Card>
+          )}
+        </section>
+      </div>
+    </>
   );
 }

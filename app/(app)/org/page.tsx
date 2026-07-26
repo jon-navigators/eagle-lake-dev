@@ -1,6 +1,7 @@
 import { requireUser } from "@/lib/session";
 import { prisma } from "@/lib/db";
 import { OrgChart } from "@/components/org-chart/OrgChart";
+import { PageHeader } from "@/components/page-header";
 import type { RoleInput } from "@/components/org-chart/useOrgLayout";
 
 export const dynamic = "force-dynamic";
@@ -20,15 +21,14 @@ export default async function OrgPage() {
   }));
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl">Org chart</h1>
-        <p className="mt-1 max-w-2xl text-bark-soft">
-          Add roles, then drag a box onto another to set who reports to whom.
-          Click a box to edit it or claim it as your own — teams follow the chart.
-        </p>
+    <>
+      <PageHeader
+        title="Org chart"
+        subtitle="Drag a box onto another to set who reports to whom — teams follow the chart"
+      />
+      <div className="mx-auto max-w-6xl px-6 py-9">
+        <OrgChart roles={input} />
       </div>
-      <OrgChart roles={input} />
-    </div>
+    </>
   );
 }

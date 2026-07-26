@@ -1,16 +1,17 @@
 import { cn } from "@/lib/utils";
 
 /**
- * A quiet progress bar. Teal fill on a subtle track by default; a gold fill on a
- * translucent track for use on the dark (espresso) company card.
+ * Outlined track with a hard-edged fill. No blur, no gradient blends.
+ * - `tone="red"`  — solid red fill in a black-outlined track (initiative cards).
+ * - `tone="gold"` — 45° gold hatch in a cream-outlined track (dark roll-up panels).
  */
 export function Progress({
   value,
-  tone = "teal",
+  tone = "red",
   className,
 }: {
   value: number; // 0–100
-  tone?: "teal" | "gold";
+  tone?: "red" | "gold";
   className?: string;
 }) {
   const pct = Math.max(0, Math.min(100, Math.round(value)));
@@ -18,8 +19,8 @@ export function Progress({
   return (
     <div
       className={cn(
-        "h-2 w-full overflow-hidden rounded-full",
-        onDark ? "bg-white/20" : "bg-subtle",
+        "h-4 w-full overflow-hidden rounded-none border-[3px]",
+        onDark ? "border-cream bg-ink" : "border-ink bg-paper",
         className,
       )}
       role="progressbar"
@@ -28,10 +29,7 @@ export function Progress({
       aria-valuemax={100}
     >
       <div
-        className={cn(
-          "h-full rounded-full transition-[width] duration-500",
-          onDark ? "bg-gold" : "bg-teal",
-        )}
+        className={cn("h-full", onDark ? "hatch-gold" : "bg-red")}
         style={{ width: `${pct}%` }}
       />
     </div>

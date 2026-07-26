@@ -1,14 +1,15 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
+// 3px black border, zero radius; focus casts a hard red offset shadow.
 const fieldStyles =
-  "w-full rounded-[4px] border border-stone-dark bg-white px-3 py-2 text-espresso placeholder:text-slate focus:border-teal focus:outline-none focus:ring-[3px] focus:ring-teal-25";
+  "w-full rounded-none border-[3px] border-ink bg-paper px-3 py-2.5 text-[14px] font-medium text-ink placeholder:text-muted focus:outline-none focus:shadow-[4px_4px_0_#c1352b] transition-shadow duration-150";
 
 export const Input = React.forwardRef<
   HTMLInputElement,
   React.InputHTMLAttributes<HTMLInputElement>
 >(({ className, ...props }, ref) => (
-  <input ref={ref} className={cn(fieldStyles, "h-10", className)} {...props} />
+  <input ref={ref} className={cn(fieldStyles, className)} {...props} />
 ));
 Input.displayName = "Input";
 
@@ -28,7 +29,7 @@ export const Select = React.forwardRef<
   HTMLSelectElement,
   React.SelectHTMLAttributes<HTMLSelectElement>
 >(({ className, ...props }, ref) => (
-  <select ref={ref} className={cn(fieldStyles, "h-10", className)} {...props} />
+  <select ref={ref} className={cn(fieldStyles, className)} {...props} />
 ));
 Select.displayName = "Select";
 
@@ -39,7 +40,7 @@ export function Label({
   return (
     <label
       className={cn(
-        "mb-1 block text-[13px] font-semibold text-coffee",
+        "mb-1.5 block text-[11px] font-extrabold uppercase tracking-[0.14em] text-ink",
         className,
       )}
       {...props}

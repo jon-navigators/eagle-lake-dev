@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/empty-state";
 import { formatDueDate } from "@/lib/utils";
 import { subtreeRoleIds } from "@/lib/org";
+import { PageHeader } from "@/components/page-header";
 
 export const dynamic = "force-dynamic";
 
@@ -21,17 +22,20 @@ export default async function TeamPage() {
 
   if (myRoles.length === 0) {
     return (
-      <div className="space-y-6">
-        <h1 className="text-3xl">Your team</h1>
-        <EmptyState
-          title="Claim your spot first."
-          hint="Your team is everyone below you on the org chart. Find your box and choose “This is me.”"
-        >
-          <Link href="/org">
-            <Button>Go to the org chart</Button>
-          </Link>
-        </EmptyState>
-      </div>
+      <>
+        <PageHeader title="Your team" />
+        <div className="mx-auto max-w-6xl px-6 py-9">
+          <EmptyState
+            dashedTop
+            title="Claim your spot first."
+            hint="Your team is everyone below you on the org chart. Find your box and choose “This is me.”"
+          >
+            <Link href="/org">
+              <Button>Go to the org chart</Button>
+            </Link>
+          </EmptyState>
+        </div>
+      </>
     );
   }
 
@@ -74,78 +78,88 @@ export default async function TeamPage() {
 
   const leadTitles = myRoles.map((r) => r.title).join(", ");
 
-  return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl">Your team</h1>
-        <p className="mt-1 text-bark-soft">
-          Everyone below {leadTitles} on the org chart.
-        </p>
-      </div>
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
-      <Card>
-        <CardBody>
-          <div className="flex items-center justify-between">
-            <p className="font-medium text-bark">Team progress</p>
-            <p className="text-sm text-bark-soft">
+  return (
+    <>
+      <PageHeader
+        title="Team"
+        subtitle={`Everyone below ${leadTitles} on the org chart`}
+      />
+
+      <div className="mx-auto max-w-6xl space-y-6 px-6 py-9">
+        <Card tone="ink" className="p-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="font-display text-[19px] uppercase text-cream">
+              Team progress
+            </p>
+            <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-gold">
               {done} of {total} done
             </p>
           </div>
-          <Progress value={pct} className="mt-3" />
+          <Progress value={pct} tone="gold" className="mt-4" />
           {unclaimedSeats > 0 ? (
-            <p className="mt-2 text-xs text-bark-soft">
+            <p className="mt-3 text-[11px] font-bold uppercase tracking-[0.12em] text-nav-email">
               {unclaimedSeats} seat{unclaimedSeats === 1 ? "" : "s"} on the chart
-              not yet claimed.
+              not yet claimed — they don&apos;t count here.
             </p>
           ) : null}
-        </CardBody>
-      </Card>
+        </Card>
 
-      <div className="space-y-4">
-        {members.map((m) => {
-          const open = m.ownedCommitments.filter((c) => c.status === "OPEN");
-          const mDone = m.ownedCommitments.length - open.length;
-          const isMe = m.id === me.id;
-          return (
-            <Card key={m.id}>
-              <CardBody>
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="font-medium text-bark">
-                    {m.name ?? m.email}
-                    {isMe ? (
-                      <span className="ml-2 align-middle">
-                        <Badge tone="moss">You</Badge>
-                      </span>
-                    ) : null}
-                  </p>
-                  <p className="text-sm text-bark-soft">
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {members.map((m) => {
+            const open = m.ownedCommitments.filter((c) => c.status === "OPEN");
+            const mDone = m.ownedCommitments.length - open.length;
+            const isMe = m.id === me.id;
+            return (
+              <Card key={m.id}>
+                <CardBody>
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    <p className="font-display text-[19px] leading-tight text-ink">
+                      {m.name ?? m.email}
+                    </p>
+                    {isMe ? <Badge tone="you">You</Badge> : null}
+                  </div>
+                  <p className="mt-1.5 text-[11px] font-extrabold uppercase tracking-[0.14em] text-muted">
                     {open.length} open · {mDone} done
                   </p>
-                </div>
-                {open.length > 0 ? (
-                  <ul className="mt-3 space-y-1.5">
-                    {open.map((c) => (
-                      <li
-                        key={c.id}
-                        className="flex items-center justify-between gap-3 text-sm"
-                      >
-                        <span className="text-bark">{c.title}</span>
-                        {c.dueDate ? (
-                          <span className="shrink-0 text-xs text-bark-soft">
-                            {formatDueDate(c.dueDate.toISOString())}
-                          </span>
-                        ) : null}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="mt-2 text-sm text-bark-soft">All clear.</p>
-                )}
-              </CardBody>
-            </Card>
-          );
-        })}
+                  {open.length > 0 ? (
+                    <ul className="mt-4 space-y-2.5">
+                      {open.map((c) => {
+                        const isOverdue = !!c.dueDate && c.dueDate < today;
+                        return (
+                          <li
+                            key={c.id}
+                            className="flex items-start justify-between gap-3 border-t-2 border-muted-border pt-2.5 text-[13px]"
+                          >
+                            <span className="text-body">{c.title}</span>
+                            {c.dueDate ? (
+                              <span
+                                className={
+                                  isOverdue
+                                    ? "shrink-0 text-[11px] font-extrabold uppercase tracking-[0.1em] text-gold-dark"
+                                    : "shrink-0 text-[11px] font-bold uppercase tracking-[0.1em] text-muted"
+                                }
+                              >
+                                {formatDueDate(c.dueDate.toISOString())}
+                              </span>
+                            ) : null}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  ) : (
+                    <p className="mt-4 text-[12px] font-extrabold uppercase tracking-[0.12em] text-green">
+                      All clear.
+                    </p>
+                  )}
+                </CardBody>
+              </Card>
+            );
+          })}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

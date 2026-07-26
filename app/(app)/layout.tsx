@@ -22,7 +22,7 @@ export default async function AppLayout({
   return (
     <div className="min-h-screen">
       <Nav userEmail={user.email} inboxCount={pending + unread} />
-      <main className="mx-auto max-w-5xl px-4 py-8">{children}</main>
+      <main>{children}</main>
     </div>
   );
 }

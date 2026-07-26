@@ -15,36 +15,35 @@ export type PendingRequestView = {
 /** A line in the inbox: someone asked you to take this on. */
 export function RequestRow({ request }: { request: PendingRequestView }) {
   return (
-    <Card className="flex flex-wrap items-start justify-between gap-4 p-4">
-      <div className="min-w-0 flex-1">
-        <p className="text-sm text-bark-soft">
-          <span className="font-medium text-bark">{request.fromName}</span> asked
-          you to
+    <Card className="flex flex-col p-5">
+      <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-red">
+        {request.fromName} asked you to
+      </p>
+      <p className="mt-2 font-display text-[19px] leading-tight text-ink">
+        {request.title}
+      </p>
+      {request.description ? (
+        <p className="mt-2 max-w-[60ch] whitespace-pre-wrap text-[14px] leading-relaxed text-body">
+          {request.description}
         </p>
-        <p className="mt-0.5 font-medium text-bark">{request.title}</p>
-        {request.description ? (
-          <p className="mt-1 whitespace-pre-wrap text-sm text-bark-soft">
-            {request.description}
-          </p>
-        ) : null}
-        {request.dueDate ? (
-          <div className="mt-2">
-            <Badge tone="neutral">{formatDueDate(request.dueDate)}</Badge>
-          </div>
-        ) : null}
-      </div>
+      ) : null}
+      {request.dueDate ? (
+        <div className="mt-3">
+          <Badge tone="due">Due {formatDueDate(request.dueDate)}</Badge>
+        </div>
+      ) : null}
 
-      {/* Accept / Decline sit together on the right — equal weight. */}
-      <div className="flex shrink-0 items-center gap-2">
-        <form action={acceptRequest}>
+      {/* Accept and Decline carry equal weight — declining is a legitimate choice. */}
+      <div className="mt-5 flex items-center gap-3">
+        <form action={acceptRequest} className="flex-1">
           <input type="hidden" name="id" value={request.id} />
-          <Button type="submit" variant="secondary" size="sm">
+          <Button type="submit" variant="accept" className="w-full">
             Accept
           </Button>
         </form>
-        <form action={declineRequest}>
+        <form action={declineRequest} className="flex-1">
           <input type="hidden" name="id" value={request.id} />
-          <Button type="submit" variant="ghost" size="sm">
+          <Button type="submit" variant="secondary" className="w-full">
             Decline
           </Button>
         </form>

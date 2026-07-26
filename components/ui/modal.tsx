@@ -52,21 +52,25 @@ export function Modal({
       ) : null}
       {open ? (
         <div
-          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-[#392f2c]/42 p-4 pt-[10vh]"
+          className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-[rgba(28,26,23,0.5)] p-4 pt-[10vh]"
           onClick={close}
         >
           <div
             className={cn(
-              "w-full max-w-md overflow-hidden rounded-[10px] border-t-[3px] border-t-gold bg-white shadow-[0_28px_56px_-12px_rgba(57,47,44,0.4)]",
+              "w-full max-w-md rounded-none border-[3px] border-ink bg-paper shadow-[10px_10px_0_rgba(28,26,23,0.55)]",
             )}
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
             aria-label={title}
           >
+            {/* red-hatched cap */}
+            <div className="hatch-red h-3 border-b-[3px] border-ink" />
             <div className="p-6">
-              <h2 className="mb-1 text-2xl">{title}</h2>
-              <div className="mt-4">{children(close)}</div>
+              <h2 className="font-display text-[21px] leading-tight text-ink">
+                {title}
+              </h2>
+              <div className="mt-5">{children(close)}</div>
             </div>
           </div>
         </div>

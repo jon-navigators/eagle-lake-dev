@@ -41,8 +41,14 @@ export function CommitmentCard({
     ? new Date(commitment.dueDate).toISOString().slice(0, 10)
     : "";
 
+  const actionBtn = done
+    ? "border-[2px] border-muted-border px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.12em] text-body hover:border-ink hover:text-ink"
+    : "border-[2px] border-ink px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.12em] text-ink hover:bg-gold";
+  const deleteBtn =
+    "border-[2px] border-muted-border px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.12em] text-muted hover:border-red hover:text-red";
+
   return (
-    <Card className="flex items-start gap-3 p-4">
+    <Card tone={done ? "done" : "paper"} className="flex items-start gap-4 p-5">
       {/* Done toggle */}
       <form action={toggleCommitmentDone} className="pt-0.5">
         <input type="hidden" name="id" value={commitment.id} />
@@ -51,15 +57,13 @@ export function CommitmentCard({
           type="submit"
           aria-label={done ? "Mark as not done" : "Mark as done"}
           className={cn(
-            "flex h-6 w-6 items-center justify-center rounded-full border-2 transition-colors",
-            done
-              ? "border-teal bg-teal text-white"
-              : "border-teal-25 hover:border-teal",
+            "flex h-[26px] w-[26px] items-center justify-center rounded-full border-[3px] border-ink transition-colors",
+            done ? "bg-ink text-gold" : "bg-transparent hover:bg-gold",
           )}
         >
           {done ? (
-            <svg viewBox="0 0 20 20" className="h-3.5 w-3.5" fill="currentColor">
-              <path d="M7.5 13.5 4 10l1.4-1.4 2.1 2.1 5.1-5.1L14 7z" />
+            <svg viewBox="0 0 20 20" className="h-4 w-4" fill="currentColor">
+              <path d="M7.5 14 3.5 10l1.6-1.6 2.4 2.4 5.4-5.4L14.5 7z" />
             </svg>
           ) : null}
         </button>
@@ -68,33 +72,37 @@ export function CommitmentCard({
       <div className="min-w-0 flex-1">
         <p
           className={cn(
-            "font-medium",
-            done ? "text-bark-soft line-through" : "text-bark",
+            "font-display text-[19px] leading-tight",
+            done
+              ? "text-muted line-through decoration-2"
+              : "text-ink",
           )}
         >
           {commitment.title}
         </p>
         {commitment.description ? (
-          <p className="mt-1 whitespace-pre-wrap text-sm text-bark-soft">
+          <p className="mt-2 max-w-[60ch] whitespace-pre-wrap text-[14px] leading-relaxed text-body">
             {commitment.description}
           </p>
         ) : null}
-        <div className="mt-2 flex flex-wrap items-center gap-2">
+        <div className="mt-3 flex flex-wrap items-center gap-2.5">
           {commitment.dueDate ? (
-            <Badge tone={overdue ? "gold" : "neutral"}>
+            <Badge tone={overdue ? "overdue" : done ? "muted" : "due"}>
               {overdue
                 ? `Overdue · ${formatDueDate(commitment.dueDate)}`
-                : formatDueDate(commitment.dueDate)}
+                : `Due ${formatDueDate(commitment.dueDate)}`}
             </Badge>
           ) : null}
           {commitment.initiative ? (
-            <Badge tone="teal">{commitment.initiative.title}</Badge>
+            <Badge tone={done ? "muted" : "initiative"}>
+              {commitment.initiative.title}
+            </Badge>
           ) : null}
         </div>
       </div>
 
       {/* Row actions */}
-      <div className="flex shrink-0 items-center gap-1">
+      <div className="flex shrink-0 items-start gap-2">
         <CommitmentDialog
           title="Edit commitment"
           action={updateCommitment}
@@ -107,10 +115,7 @@ export function CommitmentCard({
             initiativeId: commitment.initiative?.id ?? "",
           }}
           trigger={
-            <button
-              className="rounded-lg px-2 py-1 text-sm text-bark-soft hover:bg-stone/50 hover:text-bark"
-              type="button"
-            >
+            <button className={actionBtn} type="button">
               Edit
             </button>
           }
@@ -119,7 +124,7 @@ export function CommitmentCard({
           <input type="hidden" name="id" value={commitment.id} />
           <button
             type="submit"
-            className="rounded-lg px-2 py-1 text-sm text-bark-soft hover:text-clay-600"
+            className={deleteBtn}
             aria-label="Delete commitment"
           >
             Delete
