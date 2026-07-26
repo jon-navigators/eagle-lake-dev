@@ -85,8 +85,8 @@ export function RoleDialog({
               placeholder="What this role owns."
             />
           </div>
-          <div className="flex justify-end gap-2 pt-1">
-            <Button type="button" variant="ghost" onClick={close}>
+          <div className="flex justify-end gap-3 pt-1">
+            <Button type="button" variant="neutral" onClick={close}>
               Cancel
             </Button>
             <Button type="submit" disabled={pending}>

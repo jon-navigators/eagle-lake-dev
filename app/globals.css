@@ -1,80 +1,135 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-   Cairn design tokens — Navigators Design System ("Camp Ledger").
-   Editorial and warm: teal brand + gold punctuating accent, Playfair Display
-   headlines, Montserrat body, warm-paper background, white cards.
-   Status colors stay muted — this app deliberately avoids alarm red.
+   Cairn — American traditional tattoo flash.
+   Heavy black outlines, a tight four-ink palette, hard offset shadows (never
+   blurred), banner ribbons, five-point stars, parchment ground.
+   Red is the ONLY primary-action color. Gold marks state (active nav, overdue,
+   hover). Green and blue each have exactly one job.
 --------------------------------------------------------------------------- */
 @theme {
-  /* Brand + accent */
-  --color-teal: #008c95;
-  --color-teal-hover: #006b72;
-  --color-teal-press: #004f54;
-  --color-teal-10: #e5f3f4;
-  --color-teal-25: #bfe2e4;
-  --color-gold: #d19f2a;
-  --color-gold-press: #b6871f;
-  --color-gold-10: #faf5e8;
-  --color-gold-25: #f3e7ca;
+  --color-ink: #1c1a17; /* every outline + offset shadow, nav bar, headings */
+  --color-red: #c1352b; /* primary action, ribbons, focus shadow, errors, "You" */
+  --color-red-dark: #a72a21; /* red hover */
+  --color-gold: #e0a52b; /* state only: active nav, overdue, hover fill */
+  --color-gold-dark: #c98f1f; /* gold hatch second band */
+  --color-green: #3f6b52; /* initiative chips, Accept, "all clear" */
+  --color-blue: #2f5d78; /* "Waiting on <person>" chip only */
+  --color-paper: #fbf3e2; /* card + panel surfaces */
+  --color-paper-2: #f3e8cf; /* read notification rows, paper hatch band */
+  --color-tan: #e9d7b4; /* content ground behind cards */
+  --color-tan-done: #ded0ad; /* completed rows */
+  --color-tan-line: #dcc7a0; /* org canvas crosshatch */
+  --color-muted-border: #9c8c6d; /* de-emphasized outlines */
+  --color-body: #5a4c39; /* body copy */
+  --color-muted: #8a7c66; /* metadata, completed titles, placeholders */
+  --color-nav-email: #9a8f7a; /* nav email grey on black */
+  --color-cream: #f4e7cf; /* reversed text on ink */
 
-  /* Neutrals */
-  --color-espresso: #392f2c; /* body text / headings */
-  --color-coffee: #61514e; /* secondary text */
-  --color-slate: #8e9c9c; /* tertiary / captions */
-  --color-paper: #fbfaf8; /* page background (warm paper) */
-  --color-surface: #ffffff; /* cards */
-  --color-subtle: #f6f5f5; /* tracks, done rows, badge fills */
-  --color-hair: #e3e0dc; /* hairline border */
-  --color-divider: #ececea;
+  /* --- Legacy aliases: keep untouched utility classes coherent in the new ink
+         palette (older classes like text-bark / bg-sand still appear in a few
+         spots). --- */
+  --color-pine: #c1352b;
+  --color-pine-700: #a72a21;
+  --color-moss: #3f6b52;
+  --color-bark: #1c1a17;
+  --color-bark-soft: #5a4c39;
+  --color-clay: #c1352b;
+  --color-clay-600: #a72a21;
+  --color-sand: #e9d7b4;
+  --color-stone: #1c1a17;
+  --color-stone-dark: #9c8c6d;
+  --color-sky: #2f5d78;
+  --color-espresso: #1c1a17;
+  --color-coffee: #5a4c39;
+  --color-slate: #8a7c66;
+  --color-subtle: #f3e8cf;
+  --color-hair: #1c1a17;
+  --color-teal: #c1352b;
+  --color-teal-hover: #a72a21;
+  --color-teal-10: #3f6b52;
+  --color-teal-25: #9c8c6d;
+  --color-gold-press: #1c1a17;
+  --color-gold-10: #e0a52b;
+  --color-gold-25: #1c1a17;
+  --color-danger: #c1352b;
+  --color-divider: #9c8c6d;
+  --color-surface: #fbf3e2;
 
-  /* Status (muted, never alarm red) */
-  --color-danger: #b64224;
-  --color-orange: #e16b2a;
-
-  /* --- Legacy token names remapped to the new palette so existing utility
-         classes (bg-pine, text-bark, bg-clay, …) render Camp Ledger. --- */
-  --color-pine: #008c95; /* was forest green → teal (primary) */
-  --color-pine-700: #006b72;
-  --color-moss: #008c95; /* success/progress/"you" → teal */
-  --color-bark: #392f2c; /* text → espresso */
-  --color-bark-soft: #61514e; /* muted text → coffee */
-  --color-clay: #d19f2a; /* accent → gold */
-  --color-clay-600: #b6871f;
-  --color-sand: #fbfaf8; /* page bg → warm paper */
-  --color-cream: #ffffff; /* surface → white */
-  --color-stone: #e3e0dc; /* borders → hairline */
-  --color-stone-dark: #c6cdcd; /* input borders → slate-50 */
-  --color-sky: #008c95; /* info → teal */
-
-  --font-serif:
-    var(--font-playfair), Georgia, Cambria, "Times New Roman", serif;
-  --font-sans:
-    var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
-
-  --radius-2xl: 1rem;
+  --font-display: var(--font-alfa), Georgia, serif;
+  --font-sans: var(--font-montserrat), "Helvetica Neue", Arial, sans-serif;
 }
 
 @layer base {
   html {
-    background-color: var(--color-paper);
+    background-color: var(--color-tan);
   }
   body {
-    background-color: var(--color-paper);
-    color: var(--color-espresso);
+    background-color: var(--color-tan);
+    color: var(--color-body);
     font-family: var(--font-sans);
+    font-weight: 500;
     -webkit-font-smoothing: antialiased;
   }
   h1,
   h2,
   h3 {
-    font-family: var(--font-serif);
+    font-family: var(--font-display);
     font-weight: 400;
-    color: var(--color-espresso);
-    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    text-transform: uppercase;
   }
   ::selection {
-    background-color: var(--color-gold-25);
-    color: var(--color-espresso);
+    background-color: var(--color-gold);
+    color: var(--color-ink);
+  }
+}
+
+@layer utilities {
+  /* Notched banner ribbon (screen + modal titles). */
+  .ribbon-notch {
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      calc(100% - 14px) 50%,
+      100% 100%,
+      0 100%,
+      14px 50%
+    );
+  }
+
+  /* 45° hard-edged hatching — the only permitted "gradient". */
+  .hatch-red {
+    background-image: repeating-linear-gradient(
+      45deg,
+      #c1352b 0 10px,
+      #a72a21 10px 20px
+    );
+  }
+  .hatch-gold {
+    background-image: repeating-linear-gradient(
+      45deg,
+      #e0a52b 0 8px,
+      #c98f1f 8px 16px
+    );
+  }
+  .hatch-paper {
+    background-image: repeating-linear-gradient(
+      45deg,
+      #fbf3e2 0 10px,
+      #f3e8cf 10px 20px
+    );
+  }
+
+  /* Org-chart canvas crosshatch. */
+  .crosshatch {
+    background-image:
+      repeating-linear-gradient(0deg, #dcc7a0 0 1px, transparent 1px 24px),
+      repeating-linear-gradient(90deg, #dcc7a0 0 1px, transparent 1px 24px);
+  }
+
+  /* Presses into its own shadow. */
+  .press:active {
+    transform: translate(3px, 3px);
   }
 }

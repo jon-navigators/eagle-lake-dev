@@ -104,8 +104,8 @@ export function CommitmentDialog({
             ) : null}
           </div>
 
-          <div className="flex justify-end gap-2 pt-2">
-            <Button type="button" variant="ghost" onClick={close}>
+          <div className="flex justify-end gap-3 pt-2">
+            <Button type="button" variant="neutral" onClick={close}>
               Cancel
             </Button>
             <Button type="submit" disabled={pending}>

@@ -9,30 +9,30 @@ export type WaitingView = {
   toName: string;
 };
 
-/** A request you sent that's still pending — visible, but calm. */
+/** A request you sent that's still pending — provisional, so it's hatched + dashed. */
 export function WaitingRow({ item }: { item: WaitingView }) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-[10px] border border-dashed border-stone-dark bg-white px-4 py-3">
+    <div className="hatch-paper flex flex-wrap items-center justify-between gap-4 border-[3px] border-dashed border-ink px-5 py-4">
       <div className="min-w-0">
-        <p className="text-sm text-bark">
-          {item.title}{" "}
-          <span className="text-bark-soft">— waiting on {item.toName}</span>
+        <p className="font-display text-[17px] leading-tight text-ink">
+          {item.title}
         </p>
+        <div className="mt-2 flex flex-wrap items-center gap-2.5">
+          <Badge tone="waiting">Waiting on {item.toName}</Badge>
+          {item.dueDate ? (
+            <Badge tone="due">Due {formatDueDate(item.dueDate)}</Badge>
+          ) : null}
+        </div>
       </div>
-      <div className="flex items-center gap-3">
-        {item.dueDate ? (
-          <Badge tone="muted">{formatDueDate(item.dueDate)}</Badge>
-        ) : null}
-        <form action={withdrawRequest}>
-          <input type="hidden" name="id" value={item.id} />
-          <button
-            type="submit"
-            className="text-xs text-bark-soft hover:text-clay-600"
-          >
-            Withdraw
-          </button>
-        </form>
-      </div>
+      <form action={withdrawRequest}>
+        <input type="hidden" name="id" value={item.id} />
+        <button
+          type="submit"
+          className="border-[2px] border-muted-border px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.12em] text-muted hover:border-red hover:text-red"
+        >
+          Withdraw
+        </button>
+      </form>
     </div>
   );
 }

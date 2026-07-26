@@ -6,6 +6,8 @@ import { CommitmentCard, type CommitmentView } from "@/components/commitment-car
 import { RequestDialog, type PersonOption } from "@/components/request-form";
 import { WaitingRow, type WaitingView } from "@/components/waiting-row";
 import { EmptyState } from "@/components/empty-state";
+import { PageHeader } from "@/components/page-header";
+import { SectionHeader } from "@/components/ui/flash";
 import { createCommitment } from "@/app/(app)/commitments/actions";
 
 export const dynamic = "force-dynamic";
@@ -71,72 +73,86 @@ export default async function HomePage() {
   }));
 
   return (
-    <div className="space-y-8">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-3xl">Your commitments</h1>
-          <p className="mt-1 text-bark-soft">
-            {open.length > 0
-              ? `${open.length} open · ${firstName}'s list`
-              : `Nothing open right now, ${firstName}.`}
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <RequestDialog
-            people={peopleOptions}
-            initiatives={initiatives}
-            trigger={<Button variant="secondary">Ask a teammate</Button>}
-          />
-          <CommitmentDialog
-            title="New commitment"
-            action={createCommitment}
-            initiatives={initiatives}
-            trigger={<Button>+ New commitment</Button>}
-          />
-        </div>
+    <>
+      <PageHeader
+        title="Your commitments"
+        subtitle={
+          open.length > 0
+            ? `${open.length} open · ${firstName}'s list`
+            : `Nothing open right now, ${firstName}`
+        }
+        actions={
+          <>
+            <RequestDialog
+              people={peopleOptions}
+              initiatives={initiatives}
+              trigger={<Button variant="secondary">Ask a teammate</Button>}
+            />
+            <CommitmentDialog
+              title="New commitment"
+              action={createCommitment}
+              initiatives={initiatives}
+              trigger={<Button>+ New commitment</Button>}
+            />
+          </>
+        }
+      />
+
+      <div className="mx-auto max-w-6xl px-6 py-9">
+        {open.length === 0 && done.length === 0 ? (
+          <EmptyState
+            title="Nothing on your plate."
+            hint="Enjoy the quiet. It won't last."
+          >
+            <CommitmentDialog
+              title="New commitment"
+              action={createCommitment}
+              initiatives={initiatives}
+              trigger={<Button>+ Add your first commitment</Button>}
+            />
+          </EmptyState>
+        ) : (
+          <div className="space-y-4">
+            {open.map((c) => (
+              <CommitmentCard
+                key={c.id}
+                commitment={c}
+                initiatives={initiatives}
+              />
+            ))}
+          </div>
+        )}
+
+        {done.length > 0 ? (
+          <section>
+            <SectionHeader className="mb-4 mt-10">
+              Done · {done.length}
+            </SectionHeader>
+            <div className="space-y-4">
+              {done.map((c) => (
+                <CommitmentCard
+                  key={c.id}
+                  commitment={c}
+                  initiatives={initiatives}
+                />
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+        {waiting.length > 0 ? (
+          <section>
+            <SectionHeader className="mb-4 mt-10">
+              Waiting on others · {waiting.length}
+            </SectionHeader>
+            <div className="space-y-4">
+              {waiting.map((w) => (
+                <WaitingRow key={w.id} item={w} />
+              ))}
+            </div>
+          </section>
+        ) : null}
       </div>
-
-      {open.length === 0 && done.length === 0 ? (
-        <EmptyState
-          title="Nothing on your plate. Enjoy the quiet."
-          hint="When you make a promise — to yourself or someone else — add it here."
-        >
-          <CommitmentDialog
-            title="New commitment"
-            action={createCommitment}
-            initiatives={initiatives}
-            trigger={<Button>+ Add your first commitment</Button>}
-          />
-        </EmptyState>
-      ) : (
-        <div className="space-y-3">
-          {open.map((c) => (
-            <CommitmentCard key={c.id} commitment={c} initiatives={initiatives} />
-          ))}
-        </div>
-      )}
-
-      {done.length > 0 ? (
-        <section className="space-y-3">
-          <h2 className="text-sm font-medium uppercase tracking-wide text-bark-soft">
-            Done · {done.length}
-          </h2>
-          {done.map((c) => (
-            <CommitmentCard key={c.id} commitment={c} initiatives={initiatives} />
-          ))}
-        </section>
-      ) : null}
-
-      {waiting.length > 0 ? (
-        <section className="space-y-2">
-          <h2 className="text-sm font-medium uppercase tracking-wide text-bark-soft">
-            Waiting on others · {waiting.length}
-          </h2>
-          {waiting.map((w) => (
-            <WaitingRow key={w.id} item={w} />
-          ))}
-        </section>
-      ) : null}
-    </div>
+    </>
   );
 }

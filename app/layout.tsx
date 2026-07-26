@@ -1,10 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { Playfair_Display, Montserrat } from "next/font/google";
+import { Alfa_Slab_One, Montserrat } from "next/font/google";
 import "./globals.css";
 
-const playfair = Playfair_Display({
+const alfa = Alfa_Slab_One({
   subsets: ["latin"],
-  variable: "--font-playfair",
+  weight: "400",
+  variable: "--font-alfa",
   display: "swap",
 });
 
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#fbfaf8",
+  themeColor: "#1c1a17",
 };
 
 export default function RootLayout({
@@ -31,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${playfair.variable} ${montserrat.variable}`}>
+    <html lang="en" className={`${alfa.variable} ${montserrat.variable}`}>
       <body>{children}</body>
     </html>
   );

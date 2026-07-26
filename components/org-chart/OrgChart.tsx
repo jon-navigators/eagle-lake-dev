@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import {
   ReactFlow,
   ReactFlowProvider,
-  Background,
   Controls,
   Panel,
   useNodesState,
@@ -19,6 +18,7 @@ import { RoleNode } from "./RoleNode";
 import { layoutRoles, type RoleInput } from "./useOrgLayout";
 import { RoleDialog } from "./role-dialog";
 import { Button } from "@/components/ui/button";
+import { Notice } from "@/components/ui/flash";
 import {
   createRole,
   updateRole,
@@ -45,14 +45,28 @@ function Inspector({
   }
 
   return (
-    <div className="w-64 rounded-[10px] border border-hair bg-white p-4 shadow-[0_16px_40px_-12px_rgba(57,47,44,0.24)]">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate">
+    <div className="w-[300px] rounded-none border-[3px] border-ink bg-paper p-5 shadow-[10px_10px_0_#1c1a17]">
+      <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-red">
         Selected role
       </p>
-      <p className="mt-1 font-serif text-2xl text-espresso">{selected.title}</p>
-      <p className="text-sm text-coffee">{selected.personName}</p>
+      <p className="mt-2 font-display text-[21px] leading-tight text-ink">
+        {selected.title}
+      </p>
+      <div className="mt-2">
+        {selected.claimed ? (
+          <span className="rounded-full border-2 border-ink px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.12em] text-ink">
+            {selected.personName}
+          </span>
+        ) : (
+          <span className="rounded-full border-2 border-muted-border px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.12em] text-muted">
+            Unclaimed
+          </span>
+        )}
+      </div>
       {selected.description ? (
-        <p className="mt-2 text-xs text-coffee">{selected.description}</p>
+        <p className="mt-3 text-[13px] leading-relaxed text-body">
+          {selected.description}
+        </p>
       ) : null}
 
       <div className="mt-4 flex flex-col gap-2">
@@ -140,7 +154,7 @@ function Inner({ roles }: { roles: RoleInput[] }) {
   const selected = roles.find((r) => r.id === selectedId) ?? null;
 
   return (
-    <div className="h-[70vh] w-full overflow-hidden rounded-[10px] border border-hair bg-subtle">
+    <div className="crosshatch h-[70vh] w-full overflow-hidden rounded-none border-[3px] border-ink bg-tan shadow-[10px_10px_0_#1c1a17]">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -154,8 +168,10 @@ function Inner({ roles }: { roles: RoleInput[] }) {
         fitView
         proOptions={{ hideAttribution: true }}
       >
-        <Background color="#dad9d7" gap={22} />
-        <Controls showInteractive={false} />
+        <Controls
+          showInteractive={false}
+          className="!rounded-none !border-[3px] !border-ink !bg-paper !shadow-[4px_4px_0_#1c1a17] [&_button]:!border-ink [&_button]:!bg-paper [&_button:hover]:!bg-gold [&_button]:!fill-ink"
+        />
 
         <Panel position="top-left">
           <RoleDialog
@@ -167,9 +183,7 @@ function Inner({ roles }: { roles: RoleInput[] }) {
 
         {error ? (
           <Panel position="top-center">
-            <div className="rounded-lg bg-clay/10 px-3 py-1.5 text-sm text-clay-600">
-              {error}
-            </div>
+            <Notice>{error}</Notice>
           </Panel>
         ) : null}
 

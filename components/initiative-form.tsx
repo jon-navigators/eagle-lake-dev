@@ -4,7 +4,7 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
-import { Input, Textarea, Select, Label } from "@/components/ui/input";
+import { Input, Textarea, Label } from "@/components/ui/input";
 
 export type InitiativeDraft = {
   id?: string;
@@ -67,18 +67,26 @@ export function InitiativeDialog({
             />
           </div>
           <div>
-            <Label htmlFor="init-period">Timeframe</Label>
-            <Select
-              id="init-period"
-              name="period"
-              defaultValue={initial?.period ?? "QUARTERLY"}
-            >
-              <option value="QUARTERLY">Quarterly</option>
-              <option value="ANNUAL">Annual</option>
-            </Select>
+            <Label>Timeframe</Label>
+            <div className="flex gap-3">
+              {(["QUARTERLY", "ANNUAL"] as const).map((p) => (
+                <label key={p} className="flex-1">
+                  <input
+                    type="radio"
+                    name="period"
+                    value={p}
+                    defaultChecked={(initial?.period ?? "QUARTERLY") === p}
+                    className="peer sr-only"
+                  />
+                  <span className="block cursor-pointer border-[3px] border-ink bg-paper px-3 py-2.5 text-center text-[11px] font-extrabold uppercase tracking-[0.12em] text-ink transition-[background-color,color,box-shadow] hover:bg-tan peer-checked:bg-red peer-checked:text-paper peer-checked:shadow-[4px_4px_0_#1c1a17]">
+                    {p === "ANNUAL" ? "Annual" : "Quarterly"}
+                  </span>
+                </label>
+              ))}
+            </div>
           </div>
-          <div className="flex justify-end gap-2 pt-1">
-            <Button type="button" variant="ghost" onClick={close}>
+          <div className="flex justify-end gap-3 pt-1">
+            <Button type="button" variant="neutral" onClick={close}>
               Cancel
             </Button>
             <Button type="submit" disabled={pending}>
